@@ -9,6 +9,10 @@
       href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
     />
     <style>
+      * {
+        box-sizing: border-box;
+      }
+      
       body {
         font-family: Arial, sans-serif;
         margin: 0;
@@ -17,39 +21,62 @@
         flex-direction: column;
         height: 100vh;
       }
+      
       #header {
         background-color: #2c3e50;
         color: white;
         padding: 10px 20px;
         text-align: center;
       }
+      
       #container {
         display: flex;
         flex: 1;
+        flex-direction: column;
       }
+      
+      @media (min-width: 768px) {
+        #container {
+          flex-direction: row;
+        }
+      }
+      
       #controls {
-        width: 300px;
-        padding: 20px;
+        width: 100%;
+        padding: 15px;
         background-color: #f5f5f5;
         overflow-y: auto;
+        max-height: 40vh;
       }
+      
+      @media (min-width: 768px) {
+        #controls {
+          width: 300px;
+          max-height: none;
+        }
+      }
+      
       #map {
         flex: 1;
+        min-height: 60vh;
       }
+      
       .form-group {
         margin-bottom: 15px;
       }
+      
       label {
         display: block;
         margin-bottom: 5px;
         font-weight: bold;
       }
+      
       input,
       button {
         width: 100%;
         padding: 8px;
-        box-sizing: border-box;
       }
+      
       button {
         background-color: #3498db;
         color: white;
@@ -58,22 +85,27 @@
         padding: 10px;
         margin-top: 10px;
       }
+      
       button:hover {
         background-color: #2980b9;
       }
+      
       #path-info {
         margin-top: 20px;
         padding: 10px;
         background-color: #e8f4f8;
         border-radius: 5px;
       }
+      
       .legend {
         padding: 10px;
         background: white;
         border-radius: 5px;
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
         line-height: 1.5;
+        font-size: 0.9em;
       }
+      
       .legend i {
         width: 18px;
         height: 18px;
@@ -81,6 +113,7 @@
         margin-right: 8px;
         opacity: 0.7;
       }
+      
       .drone-icon {
         background-image: url("https://cdn-icons-png.flaticon.com/512/1163/1163477.png");
         background-size: contain;
@@ -89,13 +122,43 @@
         height: 40px;
         transform: rotate(0deg);
       }
+      
       #animation-controls {
         margin-top: 15px;
         display: flex;
         justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
       }
+      
       #animation-speed {
-        width: 60%;
+        flex: 1;
+        min-width: 150px;
+      }
+      
+      #start-animation {
+        flex: 1;
+        min-width: 150px;
+      }
+      
+      /* Mobile-specific adjustments */
+      @media (max-width: 480px) {
+        #header h1 {
+          font-size: 1.5rem;
+          margin: 0;
+        }
+        
+        #path-info h3 {
+          font-size: 1.1rem;
+        }
+        
+        .legend h4 {
+          font-size: 1rem;
+        }
+        
+        button {
+          font-size: 0.9rem;
+        }
       }
     </style>
   </head>
@@ -532,19 +595,63 @@
         return false;
       }
 
-      // Function to calculate a path avoiding red zones
+      // Function to create a curved path around a point
+      function createCurveAroundZone(start, end, zoneCenter, radius) {
+        const curvePoints = [];
+        const steps = 20;
+        
+        // Calculate midpoint between start and end
+        const midLat = (start[0] + end[0]) / 2;
+        const midLng = (start[1] + end[1]) / 2;
+        
+        // Calculate direction vector from zone center to midpoint
+        const dirLat = midLat - zoneCenter[0];
+        const dirLng = midLng - zoneCenter[1];
+        
+        // Normalize direction vector
+        const length = Math.sqrt(dirLat * dirLat + dirLng * dirLng);
+        const normLat = dirLat / length;
+        const normLng = dirLng / length;
+        
+        // Calculate point outside the zone radius
+        const curveCenterLat = zoneCenter[0] + normLat * (radius * 1.5 / 111320); // Approx meters to degrees
+        const curveCenterLng = zoneCenter[1] + normLng * (radius * 1.5 / (111320 * Math.cos(deg2rad(zoneCenter[0]))));
+        
+        // Calculate control points for Bézier curve
+        const control1Lat = start[0] + (curveCenterLat - start[0]) * 0.5;
+        const control1Lng = start[1] + (curveCenterLng - start[1]) * 0.5;
+        
+        const control2Lat = curveCenterLat + (end[0] - curveCenterLat) * 0.5;
+        const control2Lng = curveCenterLng + (end[1] - curveCenterLng) * 0.5;
+        
+        // Generate Bézier curve points
+        for (let i = 0; i <= steps; i++) {
+          const t = i / steps;
+          const lat = 
+            Math.pow(1 - t, 3) * start[0] + 
+            3 * Math.pow(1 - t, 2) * t * control1Lat + 
+            3 * (1 - t) * Math.pow(t, 2) * control2Lat + 
+            Math.pow(t, 3) * end[0];
+          const lng = 
+            Math.pow(1 - t, 3) * start[1] + 
+            3 * Math.pow(1 - t, 2) * t * control1Lng + 
+            3 * (1 - t) * Math.pow(t, 2) * control2Lng + 
+            Math.pow(t, 3) * end[1];
+          curvePoints.push([lat, lng]);
+        }
+        
+        return curvePoints;
+      }
+
+      // Function to calculate a path avoiding red zones with curves
       function calculatePath(start, end) {
         document.getElementById("status").textContent = "Calculating path...";
 
-        // Simple straight-line path (this would be replaced with a proper pathfinding algorithm)
-        const path = [start, end];
-
-        // Check if the straight line passes through any red zones
-        let redZoneCrossed = false;
-        let yellowZoneCrossed = false;
+        // First check if straight line is safe
+        let straightLineSafe = true;
         let zonesCrossed = [];
-
-        // Sample points along the path to check for zones
+        
+        // Sample points along the straight path to check for zones
         const steps = 20;
         for (let i = 0; i <= steps; i++) {
           const t = i / steps;
@@ -553,69 +660,101 @@
 
           const redZone = isInRedZone(lat, lng);
           if (redZone && !zonesCrossed.includes(redZone.name)) {
-            redZoneCrossed = true;
+            straightLineSafe = false;
             zonesCrossed.push(redZone.name);
           }
 
           const yellowZone = isInYellowZone(lat, lng);
           if (yellowZone && !zonesCrossed.includes(yellowZone.name)) {
-            yellowZoneCrossed = true;
             zonesCrossed.push(yellowZone.name);
           }
         }
 
-        // If we cross a red zone, we need to find an alternative path
-        if (redZoneCrossed) {
-          // In a real implementation, we would use a proper pathfinding algorithm
-          // For this demo, we'll just create a detour around the red zones
-
-          // Find midpoint between start and end
-          const midLat = (start[0] + end[0]) / 2;
-          const midLng = (start[1] + end[1]) / 2;
-
-          // Calculate detour point (this is a simplified approach)
-          let detourLat = midLat;
-          let detourLng = midLng;
-
-          // Adjust the detour point based on the zones we're trying to avoid
-          if (start[0] > 16 && end[0] > 16) {
-            // If in northern AP
-            detourLat += 0.2;
-            detourLng -= 0.2;
-          } else {
-            // If in southern AP
-            detourLat -= 0.2;
-            detourLng += 0.2;
-          }
-
-          path.splice(1, 0, [detourLat, detourLng]);
-
-          // Update zones crossed for the new path
-          zonesCrossed = [];
-          for (let i = 0; i < path.length - 1; i++) {
-            const segmentStart = path[i];
-            const segmentEnd = path[i + 1];
-
-            for (let j = 0; j <= steps; j++) {
-              const t = j / steps;
-              const lat =
-                segmentStart[0] + t * (segmentEnd[0] - segmentStart[0]);
-              const lng =
-                segmentStart[1] + t * (segmentEnd[1] - segmentStart[1]);
-
-              const redZone = isInRedZone(lat, lng);
-              if (redZone && !zonesCrossed.includes(redZone.name)) {
-                zonesCrossed.push(redZone.name);
-              }
-
-              const yellowZone = isInYellowZone(lat, lng);
-              if (yellowZone && !zonesCrossed.includes(yellowZone.name)) {
-                zonesCrossed.push(yellowZone.name);
-              }
-            }
+        // If straight line is safe, use it
+        if (straightLineSafe) {
+          const path = [start, end];
+          const distance = calculateDistance(start[0], start[1], end[0], end[1]);
+          
+          document.getElementById("distance").textContent = distance.toFixed(2);
+          document.getElementById("zones-crossed").textContent =
+            zonesCrossed.length > 0 ? zonesCrossed.join(", ") : "None";
+          document.getElementById("status").textContent =
+            "Optimal path found (no restrictions)";
+            
+          return path;
+        }
+        
+        // If not safe, create a curved path around the red zones
+        let path = [];
+        let currentStart = start;
+        let remainingZones = [...redZones];
+        
+        // Find all red zones between start and end
+        const blockingZones = [];
+        for (const zone of redZones) {
+          // Simple check if zone is roughly between start and end
+          const zoneLat = zone.latlng[0];
+          const zoneLng = zone.latlng[1];
+          
+          if (
+            (zoneLat >= Math.min(start[0], end[0])) && 
+            (zoneLat <= Math.max(start[0], end[0])) &&
+            (zoneLng >= Math.min(start[1], end[1])) &&
+            (zoneLng <= Math.max(start[1], end[1]))
+          ) {
+            blockingZones.push(zone);
           }
         }
-
+        
+        // Sort zones by distance from start point
+        blockingZones.sort((a, b) => {
+          const distA = calculateDistance(start[0], start[1], a.latlng[0], a.latlng[1]);
+          const distB = calculateDistance(start[0], start[1], b.latlng[0], b.latlng[1]);
+          return distA - distB;
+        });
+        
+        // Start building the path
+        path.push(start);
+        
+        // For each blocking zone, create a curve around it
+        for (const zone of blockingZones) {
+          // Create a waypoint before the zone
+          const zoneCenter = zone.latlng;
+          const zoneRadius = zone.radius;
+          
+          // Calculate direction from start to zone center
+          const dirLat = zoneCenter[0] - currentStart[0];
+          const dirLng = zoneCenter[1] - currentStart[1];
+          
+          // Calculate point before the zone
+          const approachDist = (zoneRadius * 1.2) / 111320; // Convert meters to degrees
+          const approachLat = zoneCenter[0] - dirLat * approachDist;
+          const approachLng = zoneCenter[1] - dirLng * approachDist;
+          
+          // Add straight segment to approach point
+          path.push([approachLat, approachLng]);
+          
+          // Create curve around the zone
+          const curveEndLat = zoneCenter[0] + dirLat * approachDist;
+          const curveEndLng = zoneCenter[1] + dirLng * approachDist;
+          
+          const curvePoints = createCurveAroundZone(
+            [approachLat, approachLng],
+            [curveEndLat, curveEndLng],
+            zoneCenter,
+            zoneRadius
+          );
+          
+          // Add curve points to path (skip first point as it's the same as approach point)
+          path = path.concat(curvePoints.slice(1));
+          
+          // Update current start for next segment
+          currentStart = [curveEndLat, curveEndLng];
+        }
+        
+        // Add final segment to destination
+        path.push(end);
+        
         // Calculate total distance
         let totalDistance = 0;
         for (let i = 0; i < path.length - 1; i++) {
@@ -628,17 +767,13 @@
         }
 
         // Update UI
-        document.getElementById("distance").textContent =
-          totalDistance.toFixed(2);
+        document.getElementById("distance").textContent = totalDistance.toFixed(2);
         document.getElementById("zones-crossed").textContent =
           zonesCrossed.length > 0 ? zonesCrossed.join(", ") : "None";
-
-        if (redZoneCrossed) {
+          
+        if (zonesCrossed.length > 0) {
           document.getElementById("status").textContent =
             "Path found with detours around restricted areas";
-        } else if (yellowZoneCrossed) {
-          document.getElementById("status").textContent =
-            "Path found through restricted areas (permission required)";
         } else {
           document.getElementById("status").textContent =
             "Optimal path found (no restrictions)";
@@ -894,6 +1029,14 @@
           document.getElementById("zones-crossed").textContent = "-";
           document.getElementById("status").textContent = "Ready";
         });
+
+      // Handle window resize
+      window.addEventListener('resize', function() {
+        map.invalidateSize();
+        if (flightPath) {
+          map.fitBounds(flightPath.getBounds());
+        }
+      });
     </script>
   </body>
 </html>
