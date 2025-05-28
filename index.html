@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Andhra Pradesh Drone Flight Path Planner</title>
+    <title>Zlyft Drone Visualiser</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
@@ -12,7 +12,7 @@
       * {
         box-sizing: border-box;
       }
-      
+
       body {
         font-family: Arial, sans-serif;
         margin: 0;
@@ -21,26 +21,26 @@
         flex-direction: column;
         height: 100vh;
       }
-      
+
       #header {
         background-color: #2c3e50;
         color: white;
         padding: 10px 20px;
         text-align: center;
       }
-      
+
       #container {
         display: flex;
         flex: 1;
         flex-direction: column;
       }
-      
+
       @media (min-width: 768px) {
         #container {
           flex-direction: row;
         }
       }
-      
+
       #controls {
         width: 100%;
         padding: 15px;
@@ -48,35 +48,35 @@
         overflow-y: auto;
         max-height: 40vh;
       }
-      
+
       @media (min-width: 768px) {
         #controls {
           width: 300px;
           max-height: none;
         }
       }
-      
+
       #map {
         flex: 1;
         min-height: 60vh;
       }
-      
+
       .form-group {
         margin-bottom: 15px;
       }
-      
+
       label {
         display: block;
         margin-bottom: 5px;
         font-weight: bold;
       }
-      
+
       input,
       button {
         width: 100%;
         padding: 8px;
       }
-      
+
       button {
         background-color: #3498db;
         color: white;
@@ -85,18 +85,18 @@
         padding: 10px;
         margin-top: 10px;
       }
-      
+
       button:hover {
         background-color: #2980b9;
       }
-      
+
       #path-info {
         margin-top: 20px;
         padding: 10px;
         background-color: #e8f4f8;
         border-radius: 5px;
       }
-      
+
       .legend {
         padding: 10px;
         background: white;
@@ -105,7 +105,7 @@
         line-height: 1.5;
         font-size: 0.9em;
       }
-      
+
       .legend i {
         width: 18px;
         height: 18px;
@@ -113,16 +113,16 @@
         margin-right: 8px;
         opacity: 0.7;
       }
-      
+
       .drone-icon {
         background-image: url("https://cdn-icons-png.flaticon.com/512/1163/1163477.png");
         background-size: contain;
         background-repeat: no-repeat;
-        width: 40px;
-        height: 40px;
+        width: 20px;
+        height: 20px;
         transform: rotate(0deg);
       }
-      
+
       #animation-controls {
         margin-top: 15px;
         display: flex;
@@ -130,32 +130,32 @@
         flex-wrap: wrap;
         gap: 10px;
       }
-      
+
       #animation-speed {
         flex: 1;
         min-width: 150px;
       }
-      
+
       #start-animation {
         flex: 1;
         min-width: 150px;
       }
-      
+
       /* Mobile-specific adjustments */
       @media (max-width: 480px) {
         #header h1 {
           font-size: 1.5rem;
           margin: 0;
         }
-        
+
         #path-info h3 {
           font-size: 1.1rem;
         }
-        
+
         .legend h4 {
           font-size: 1rem;
         }
-        
+
         button {
           font-size: 0.9rem;
         }
@@ -164,7 +164,7 @@
   </head>
   <body>
     <div id="header">
-      <h1>Andhra Pradesh Drone Flight Path Planner</h1>
+      <h1>Zlyft Drone Visualiser</h1>
     </div>
     <div id="container">
       <div id="controls">
@@ -201,8 +201,7 @@
 
         <div class="legend">
           <h4>Legend</h4>
-          <p><i style="background: red"></i> Red Zone (No-fly)</p>
-          <p><i style="background: yellow"></i> Yellow Zone (Restricted)</p>
+          <p><i style="background: red"></i> No-fly Zone</p>
           <p><i style="background: green"></i> Safe Flight Path</p>
           <p><i style="background: blue"></i> Start/End Points</p>
           <p>
@@ -237,7 +236,7 @@
           city: "Visakhapatnam",
           latlng: [17.735, 83.295],
           radius: 2800,
-          description: "Naval base and defense installations (mock)",
+          description: "Naval base and defense installations",
         },
         {
           id: 2,
@@ -245,7 +244,7 @@
           city: "Visakhapatnam",
           latlng: [17.695, 83.275],
           radius: 2200,
-          description: "Port area (mock)",
+          description: "Port area",
         },
         {
           id: 3,
@@ -253,7 +252,7 @@
           city: "Sriharikota",
           latlng: [13.737, 80.23],
           radius: 3500,
-          description: "ISRO launch site (mock)",
+          description: "ISRO launch site",
         },
         {
           id: 4,
@@ -261,7 +260,7 @@
           city: "Tirupati",
           latlng: [13.683, 79.42],
           radius: 2500,
-          description: "Temple and pilgrimage area (mock)",
+          description: "Temple and pilgrimage area",
         },
         {
           id: 5,
@@ -269,7 +268,7 @@
           city: "Vijayawada",
           latlng: [16.5304, 80.7968],
           radius: 2300,
-          description: "Airport and surroundings (mock)",
+          description: "Airport and surroundings",
         },
         {
           id: 6,
@@ -277,7 +276,7 @@
           city: "Rajahmundry",
           latlng: [17.1104, 81.8182],
           radius: 2100,
-          description: "Airport and surroundings (mock)",
+          description: "Airport and surroundings",
         },
         {
           id: 7,
@@ -285,7 +284,7 @@
           city: "Kadapa",
           latlng: [14.5094, 78.7728],
           radius: 1900,
-          description: "Airport and surroundings (mock)",
+          description: "Airport and surroundings",
         },
         {
           id: 8,
@@ -293,7 +292,7 @@
           city: "Kurnool",
           latlng: [15.7179, 78.0646],
           radius: 2000,
-          description: "Airport and surroundings (mock)",
+          description: "Airport and surroundings",
         },
         {
           id: 9,
@@ -301,7 +300,7 @@
           city: "Nandyal",
           latlng: [15.48, 78.48],
           radius: 1500,
-          description: "Fictional power plant (mock)",
+          description: "Power plant facility",
         },
         {
           id: 10,
@@ -309,7 +308,7 @@
           city: "Srikakulam",
           latlng: [18.3, 83.9],
           radius: 1000,
-          description: "Fictional police headquarters (mock)",
+          description: "Police headquarters",
         },
         {
           id: 11,
@@ -317,7 +316,7 @@
           city: "Bhimavaram",
           latlng: [16.54, 81.52],
           radius: 120,
-          description: "Fictional government complex (mock)",
+          description: "Government complex",
         },
         {
           id: 12,
@@ -325,7 +324,7 @@
           city: "Bhimavaram",
           latlng: [16.545, 81.525],
           radius: 100,
-          description: "Fictional railway station (mock)",
+          description: "Railway station",
         },
         {
           id: 13,
@@ -333,7 +332,7 @@
           city: "Ongole",
           latlng: [15.5, 80.04],
           radius: 1800,
-          description: "Heavy industry zone with drone restrictions",
+          description: "Heavy industry zone",
         },
         {
           id: 22,
@@ -341,15 +340,16 @@
           city: "Nellore",
           latlng: [14.44, 79.99],
           radius: 1700,
-          description: "Fictional industrial area (mock)",
+          description: "Industrial area",
         },
+
         {
           id: 23,
           name: "Ongole Central Town",
           city: "Ongole",
           latlng: [15.51, 80.05],
           radius: 1500,
-          description: "Fictional central town (mock)",
+          description: "Central town area",
         },
         {
           id: 24,
@@ -357,7 +357,7 @@
           city: "Chittoor",
           latlng: [13.21, 79.1],
           radius: 1600,
-          description: "Fictional government campus (mock)",
+          description: "Government campus",
         },
         {
           id: 25,
@@ -365,7 +365,7 @@
           city: "Eluru",
           latlng: [16.71, 81.11],
           radius: 1200,
-          description: "Fictional medical zone (mock)",
+          description: "Medical zone",
         },
         {
           id: 26,
@@ -373,7 +373,7 @@
           city: "Kakinada",
           latlng: [16.95, 82.24],
           radius: 1800,
-          description: "Fictional port buffer (mock)",
+          description: "Port buffer zone",
         },
         {
           id: 27,
@@ -381,7 +381,7 @@
           city: "Anantapur",
           latlng: [14.68, 77.6],
           radius: 1400,
-          description: "Fictional tech park (mock)",
+          description: "Technology park",
         },
         {
           id: 28,
@@ -389,7 +389,7 @@
           city: "Guntur",
           latlng: [16.3, 80.44],
           radius: 1300,
-          description: "Fictional railway junction (mock)",
+          description: "Railway junction",
         },
         {
           id: 29,
@@ -397,84 +397,54 @@
           city: "Bhimavaram",
           latlng: [16.538, 81.518],
           radius: 150,
-          description: "Fictional market square (mock)",
+          description: "Market square",
         },
+      ];
+      // Add uneven polygon for Vizag Airport
+      // Original coordinates
+      const originalCoords = [
+        [17.729, 83.218],
+        [17.732, 83.221],
+        [17.734, 83.226],
+        [17.731, 83.23],
+        [17.727, 83.229],
+        [17.725, 83.225],
+        [17.726, 83.22],
       ];
 
-      const yellowZones = [
-        {
-          id: 14,
-          name: "Visakhapatnam Airport Yellow Zone",
-          city: "Visakhapatnam",
-          latlng: [17.7212, 83.2245],
-          innerRadius: 5000,
-          outerRadius: 12000,
-          description: "8–12 km from airport perimeter (mock)",
-        },
-        {
-          id: 15,
-          name: "Vijayawada Airport Yellow Zone",
-          city: "Vijayawada",
-          latlng: [16.5304, 80.7968],
-          innerRadius: 5000,
-          outerRadius: 12000,
-          description: "8–12 km from airport perimeter (mock)",
-        },
-        {
-          id: 16,
-          name: "Rajahmundry Airport Yellow Zone",
-          city: "Rajahmundry",
-          latlng: [17.1104, 81.8182],
-          innerRadius: 5000,
-          outerRadius: 12000,
-          description: "8–12 km from airport perimeter (mock)",
-        },
-        {
-          id: 17,
-          name: "Tirupati Airport Yellow Zone",
-          city: "Tirupati",
-          latlng: [13.6329, 79.5433],
-          innerRadius: 5000,
-          outerRadius: 12000,
-          description: "8–12 km from airport perimeter (mock)",
-        },
-        {
-          id: 18,
-          name: "Kadapa Airport Yellow Zone",
-          city: "Kadapa",
-          latlng: [14.5094, 78.7728],
-          innerRadius: 5000,
-          outerRadius: 12000,
-          description: "8–12 km from airport perimeter (mock)",
-        },
-        {
-          id: 19,
-          name: "Kurnool Airport Yellow Zone",
-          city: "Kurnool",
-          latlng: [15.7179, 78.0646],
-          innerRadius: 5000,
-          outerRadius: 12000,
-          description: "8–12 km from airport perimeter (mock)",
-        },
-        {
-          id: 20,
-          name: "Sriharikota Spaceport Yellow Zone",
-          city: "Sriharikota",
-          latlng: [13.737, 80.23],
-          innerRadius: 5000,
-          outerRadius: 12000,
-          description: "8–12 km from spaceport perimeter (mock)",
-        },
-        {
-          id: 21,
-          name: "Visakhapatnam Naval Complex Yellow Zone",
-          city: "Visakhapatnam",
-          latlng: [17.735, 83.295],
-          innerRadius: 5000,
-          outerRadius: 12000,
-          description: "8–12 km from naval base perimeter (mock)",
-        },
+      // Step 1: Find centroid
+      let latSum = 0,
+        lngSum = 0;
+      originalCoords.forEach((coord) => {
+        latSum += coord[0];
+        lngSum += coord[1];
+      });
+      const centroid = [
+        latSum / originalCoords.length,
+        lngSum / originalCoords.length,
       ];
+
+      // Step 2: Scale each coordinate
+      const scaleFactor = 5;
+      const scaledCoords = originalCoords.map((coord) => {
+        const latOffset = coord[0] - centroid[0];
+        const lngOffset = coord[1] - centroid[1];
+        return [
+          centroid[0] + latOffset * scaleFactor,
+          centroid[1] + lngOffset * scaleFactor,
+        ];
+      });
+
+      // Step 3: Create the polygon
+      const vizagPolygon = L.polygon(scaledCoords, {
+        color: "red",
+        fillColor: "#f03",
+        fillOpacity: 0.3,
+      }).addTo(map);
+
+      vizagPolygon.bindPopup(
+        `<b>Vizag Airport</b><br>Visakhapatnam<br>Scaled 5x Irregular No-Fly Zone`
+      );
 
       // Add red zones to the map
       redZones.forEach((zone) => {
@@ -487,32 +457,6 @@
 
         circle.bindPopup(
           `<b>${zone.name}</b><br>${zone.city}<br>${zone.description}`
-        );
-      });
-
-      // Add yellow zones to the map
-      yellowZones.forEach((zone) => {
-        // Outer yellow zone (8-12km)
-        const outerCircle = L.circle(zone.latlng, {
-          color: "yellow",
-          fillColor: "#ff0",
-          fillOpacity: 0.2,
-          radius: zone.outerRadius,
-        }).addTo(map);
-
-        // Inner yellow zone (5-8km)
-        const innerCircle = L.circle(zone.latlng, {
-          color: "orange",
-          fillColor: "#fa0",
-          fillOpacity: 0.2,
-          radius: zone.innerRadius,
-        }).addTo(map);
-
-        outerCircle.bindPopup(
-          `<b>${zone.name}</b><br>${zone.city}<br>${zone.description}`
-        );
-        innerCircle.bindPopup(
-          `<b>${zone.name} (Inner Restricted Area)</b><br>${zone.city}<br>${zone.description}`
         );
       });
 
@@ -576,212 +520,305 @@
         return false;
       }
 
-      // Function to check if a point is in a yellow zone
-      function isInYellowZone(lat, lng) {
-        for (const zone of yellowZones) {
-          const distance = calculateDistance(
-            lat,
-            lng,
-            zone.latlng[0],
-            zone.latlng[1]
-          );
-          if (
-            distance * 1000 <= zone.outerRadius &&
-            distance * 1000 > zone.innerRadius
-          ) {
-            return zone;
-          }
-        }
-        return false;
-      }
-
       // Function to create a curved path around a point
       function createCurveAroundZone(start, end, zoneCenter, radius) {
         const curvePoints = [];
         const steps = 20;
-        
+
         // Calculate midpoint between start and end
         const midLat = (start[0] + end[0]) / 2;
         const midLng = (start[1] + end[1]) / 2;
-        
+
         // Calculate direction vector from zone center to midpoint
         const dirLat = midLat - zoneCenter[0];
         const dirLng = midLng - zoneCenter[1];
-        
+
         // Normalize direction vector
         const length = Math.sqrt(dirLat * dirLat + dirLng * dirLng);
         const normLat = dirLat / length;
         const normLng = dirLng / length;
-        
-        // Calculate point outside the zone radius
-        const curveCenterLat = zoneCenter[0] + normLat * (radius * 1.5 / 111320); // Approx meters to degrees
-        const curveCenterLng = zoneCenter[1] + normLng * (radius * 1.5 / (111320 * Math.cos(deg2rad(zoneCenter[0]))));
-        
+
+        // Calculate point outside the zone radius (with 20% buffer)
+        const curveCenterLat =
+          zoneCenter[0] + normLat * ((radius * 1.2) / 111320); // Approx meters to degrees
+        const curveCenterLng =
+          zoneCenter[1] +
+          normLng *
+            ((radius * 1.2) / (111320 * Math.cos(deg2rad(zoneCenter[0]))));
+
         // Calculate control points for Bézier curve
         const control1Lat = start[0] + (curveCenterLat - start[0]) * 0.5;
         const control1Lng = start[1] + (curveCenterLng - start[1]) * 0.5;
-        
+
         const control2Lat = curveCenterLat + (end[0] - curveCenterLat) * 0.5;
         const control2Lng = curveCenterLng + (end[1] - curveCenterLng) * 0.5;
-        
+
         // Generate Bézier curve points
         for (let i = 0; i <= steps; i++) {
           const t = i / steps;
-          const lat = 
-            Math.pow(1 - t, 3) * start[0] + 
-            3 * Math.pow(1 - t, 2) * t * control1Lat + 
-            3 * (1 - t) * Math.pow(t, 2) * control2Lat + 
+          const lat =
+            Math.pow(1 - t, 3) * start[0] +
+            3 * Math.pow(1 - t, 2) * t * control1Lat +
+            3 * (1 - t) * Math.pow(t, 2) * control2Lat +
             Math.pow(t, 3) * end[0];
-          const lng = 
-            Math.pow(1 - t, 3) * start[1] + 
-            3 * Math.pow(1 - t, 2) * t * control1Lng + 
-            3 * (1 - t) * Math.pow(t, 2) * control2Lng + 
+          const lng =
+            Math.pow(1 - t, 3) * start[1] +
+            3 * Math.pow(1 - t, 2) * t * control1Lng +
+            3 * (1 - t) * Math.pow(t, 2) * control2Lng +
             Math.pow(t, 3) * end[1];
           curvePoints.push([lat, lng]);
         }
-        
+
         return curvePoints;
       }
 
-      // Function to calculate a path avoiding red zones with curves
-      function calculatePath(start, end) {
-        document.getElementById("status").textContent = "Calculating path...";
+      // Function to check if a path segment intersects with any red zone
+      function pathIntersectsRedZone(
+        start,
+        end,
+        steps = 20,
+        specificZone = null
+      ) {
+        const zonesToCheck = specificZone ? [specificZone] : redZones;
 
-        // First check if straight line is safe
-        let straightLineSafe = true;
-        let zonesCrossed = [];
-        
-        // Sample points along the straight path to check for zones
-        const steps = 20;
         for (let i = 0; i <= steps; i++) {
           const t = i / steps;
           const lat = start[0] + t * (end[0] - start[0]);
           const lng = start[1] + t * (end[1] - start[1]);
 
-          const redZone = isInRedZone(lat, lng);
-          if (redZone && !zonesCrossed.includes(redZone.name)) {
-            straightLineSafe = false;
-            zonesCrossed.push(redZone.name);
-          }
-
-          const yellowZone = isInYellowZone(lat, lng);
-          if (yellowZone && !zonesCrossed.includes(yellowZone.name)) {
-            zonesCrossed.push(yellowZone.name);
+          for (const zone of zonesToCheck) {
+            const distance = calculateDistance(
+              lat,
+              lng,
+              zone.latlng[0],
+              zone.latlng[1]
+            );
+            if (distance * 1000 <= zone.radius) {
+              return true;
+            }
           }
         }
+        return false;
+      }
+
+      // Function to calculate the shortest path avoiding red zones
+      function calculatePath(start, end) {
+        document.getElementById("status").textContent = "Calculating path...";
+
+        // Validate coordinates
+        if (!isValidCoordinate(start) || !isValidCoordinate(end)) {
+          document.getElementById("status").textContent = "Invalid coordinates";
+          return [start, end];
+        }
+
+        // First check if straight line is safe
+        let straightLineSafe = !pathIntersectsRedZone(start, end, 50);
 
         // If straight line is safe, use it
         if (straightLineSafe) {
           const path = [start, end];
-          const distance = calculateDistance(start[0], start[1], end[0], end[1]);
-          
+          const distance = calculateDistance(
+            start[0],
+            start[1],
+            end[0],
+            end[1]
+          );
+
           document.getElementById("distance").textContent = distance.toFixed(2);
-          document.getElementById("zones-crossed").textContent =
-            zonesCrossed.length > 0 ? zonesCrossed.join(", ") : "None";
+          document.getElementById("zones-crossed").textContent = "None";
           document.getElementById("status").textContent =
             "Optimal path found (no restrictions)";
-            
+
           return path;
         }
-        
-        // If not safe, create a curved path around the red zones
-        let path = [];
-        let currentStart = start;
-        let remainingZones = [...redZones];
-        
-        // Find all red zones between start and end
-        const blockingZones = [];
-        for (const zone of redZones) {
-          // Simple check if zone is roughly between start and end
-          const zoneLat = zone.latlng[0];
-          const zoneLng = zone.latlng[1];
-          
+
+        // If not safe, create a path that avoids red zones
+        let path = [start];
+        let currentPosition = start;
+        let maxAttempts = 10;
+        let attempts = 0;
+
+        while (attempts < maxAttempts) {
+          attempts++;
+
+          // Find the next waypoint that moves us toward the destination while avoiding zones
+          let nextWaypoint = findNextWaypoint(currentPosition, end);
+
+          if (!nextWaypoint) {
+            // Couldn't find a safe way forward
+            break;
+          }
+
+          path.push(nextWaypoint);
+          currentPosition = nextWaypoint;
+
+          // If we're close enough to the destination, break the loop
           if (
-            (zoneLat >= Math.min(start[0], end[0])) && 
-            (zoneLat <= Math.max(start[0], end[0])) &&
-            (zoneLng >= Math.min(start[1], end[1])) &&
-            (zoneLng <= Math.max(start[1], end[1]))
+            calculateDistance(
+              currentPosition[0],
+              currentPosition[1],
+              end[0],
+              end[1]
+            ) < 1
           ) {
-            blockingZones.push(zone);
+            break;
           }
         }
-        
-        // Sort zones by distance from start point
-        blockingZones.sort((a, b) => {
-          const distA = calculateDistance(start[0], start[1], a.latlng[0], a.latlng[1]);
-          const distB = calculateDistance(start[0], start[1], b.latlng[0], b.latlng[1]);
-          return distA - distB;
-        });
-        
-        // Start building the path
-        path.push(start);
-        
-        // For each blocking zone, create a curve around it
-        for (const zone of blockingZones) {
-          // Create a waypoint before the zone
-          const zoneCenter = zone.latlng;
-          const zoneRadius = zone.radius;
-          
-          // Calculate direction from start to zone center
-          const dirLat = zoneCenter[0] - currentStart[0];
-          const dirLng = zoneCenter[1] - currentStart[1];
-          
-          // Calculate point before the zone
-          const approachDist = (zoneRadius * 1.2) / 111320; // Convert meters to degrees
-          const approachLat = zoneCenter[0] - dirLat * approachDist;
-          const approachLng = zoneCenter[1] - dirLng * approachDist;
-          
-          // Add straight segment to approach point
-          path.push([approachLat, approachLng]);
-          
-          // Create curve around the zone
-          const curveEndLat = zoneCenter[0] + dirLat * approachDist;
-          const curveEndLng = zoneCenter[1] + dirLng * approachDist;
-          
-          const curvePoints = createCurveAroundZone(
-            [approachLat, approachLng],
-            [curveEndLat, curveEndLng],
-            zoneCenter,
-            zoneRadius
-          );
-          
-          // Add curve points to path (skip first point as it's the same as approach point)
-          path = path.concat(curvePoints.slice(1));
-          
-          // Update current start for next segment
-          currentStart = [curveEndLat, curveEndLng];
-        }
-        
-        // Add final segment to destination
+
+        // Add the final destination point
         path.push(end);
-        
+
+        // Simplify the path by removing unnecessary points
+        const simplifiedPath = simplifyPath(path);
+
         // Calculate total distance
         let totalDistance = 0;
-        for (let i = 0; i < path.length - 1; i++) {
+        for (let i = 0; i < simplifiedPath.length - 1; i++) {
           totalDistance += calculateDistance(
-            path[i][0],
-            path[i][1],
-            path[i + 1][0],
-            path[i + 1][1]
+            simplifiedPath[i][0],
+            simplifiedPath[i][1],
+            simplifiedPath[i + 1][0],
+            simplifiedPath[i + 1][1]
           );
         }
 
-        // Update UI
-        document.getElementById("distance").textContent = totalDistance.toFixed(2);
-        document.getElementById("zones-crossed").textContent =
-          zonesCrossed.length > 0 ? zonesCrossed.join(", ") : "None";
-          
-        if (zonesCrossed.length > 0) {
-          document.getElementById("status").textContent =
-            "Path found with detours around restricted areas";
-        } else {
-          document.getElementById("status").textContent =
-            "Optimal path found (no restrictions)";
+        // Verify the final path doesn't intersect any red zones
+        let safePath = true;
+        for (let i = 0; i < simplifiedPath.length - 1; i++) {
+          if (
+            pathIntersectsRedZone(simplifiedPath[i], simplifiedPath[i + 1], 50)
+          ) {
+            safePath = false;
+            break;
+          }
         }
 
-        return path;
+        if (!safePath) {
+          document.getElementById("status").textContent =
+            "Unable to find completely safe path - showing best option";
+        } else {
+          document.getElementById("status").textContent =
+            "Safe path found (avoiding no-fly zones)";
+        }
+
+        document.getElementById("distance").textContent =
+          totalDistance.toFixed(2);
+        document.getElementById("zones-crossed").textContent = "None";
+
+        return simplifiedPath;
       }
 
+      // Helper function to find the next waypoint
+      function findNextWaypoint(current, destination) {
+        const bearing = calculateBearing(current, destination);
+        const maxDistance = 10; // km
+
+        // Try different angles and distances to find a safe path
+        for (let angleOffset = 0; angleOffset <= 180; angleOffset += 30) {
+          for (let distance = 1; distance <= maxDistance; distance += 2) {
+            // Try both clockwise and counter-clockwise directions
+            for (let direction of [1, -1]) {
+              const angle = bearing + angleOffset * direction;
+              const waypoint = calculateDestinationPoint(
+                current,
+                angle,
+                distance
+              );
+
+              if (!isValidCoordinate(waypoint)) continue;
+
+              // Check if this path segment is safe
+              if (!pathIntersectsRedZone(current, waypoint, 50)) {
+                // Also check if we can get from this waypoint to destination
+                if (!pathIntersectsRedZone(waypoint, destination, 50)) {
+                  return waypoint;
+                }
+              }
+            }
+          }
+        }
+
+        return null; // Couldn't find a safe waypoint
+      }
+
+      // Calculate bearing from point A to point B (in degrees)
+      function calculateBearing(start, end) {
+        const startLat = deg2rad(start[0]);
+        const startLng = deg2rad(start[1]);
+        const endLat = deg2rad(end[0]);
+        const endLng = deg2rad(end[1]);
+
+        const y = Math.sin(endLng - startLng) * Math.cos(endLat);
+        const x =
+          Math.cos(startLat) * Math.sin(endLat) -
+          Math.sin(startLat) * Math.cos(endLat) * Math.cos(endLng - startLng);
+        let bearing = Math.atan2(y, x);
+        bearing = rad2deg(bearing);
+        bearing = (bearing + 360) % 360;
+
+        return bearing;
+      }
+
+      // Calculate destination point given start point, bearing and distance
+      function calculateDestinationPoint(start, bearing, distance) {
+        const R = 6371; // Earth's radius in km
+        const lat1 = deg2rad(start[0]);
+        const lon1 = deg2rad(start[1]);
+        const radBearing = deg2rad(bearing);
+
+        const lat2 = Math.asin(
+          Math.sin(lat1) * Math.cos(distance / R) +
+            Math.cos(lat1) * Math.sin(distance / R) * Math.cos(radBearing)
+        );
+
+        const lon2 =
+          lon1 +
+          Math.atan2(
+            Math.sin(radBearing) * Math.sin(distance / R) * Math.cos(lat1),
+            Math.cos(distance / R) - Math.sin(lat1) * Math.sin(lat2)
+          );
+
+        return [rad2deg(lat2), rad2deg(lon2)];
+      }
+
+      // Simplify path by removing unnecessary points
+      function simplifyPath(path) {
+        if (path.length <= 2) return path;
+
+        const simplified = [path[0]];
+
+        for (let i = 1; i < path.length - 1; i++) {
+          // Check if we can skip this point without intersecting a red zone
+          if (
+            pathIntersectsRedZone(
+              simplified[simplified.length - 1],
+              path[i + 1],
+              50
+            )
+          ) {
+            simplified.push(path[i]);
+          }
+        }
+
+        simplified.push(path[path.length - 1]);
+        return simplified;
+      }
+
+      function rad2deg(rad) {
+        return rad * (180 / Math.PI);
+      }
+
+      // Helper function to validate coordinates
+      function isValidCoordinate(point) {
+        return (
+          Array.isArray(point) &&
+          point.length === 2 &&
+          !isNaN(point[0]) &&
+          !isNaN(point[1]) &&
+          Math.abs(point[0]) <= 90 &&
+          Math.abs(point[1]) <= 180
+        );
+      }
       // Function to animate drone movement along the path
       function animateDrone() {
         // Clear any existing animation
@@ -926,20 +963,29 @@
             return;
           }
 
-          // Check if start or end is in a red zone
+          // Validate coordinates
+          if (
+            !isValidCoordinate(startCoords) ||
+            !isValidCoordinate(endCoords)
+          ) {
+            alert(
+              "Invalid coordinates - values must be between -90 to 90 for latitude and -180 to 180 for longitude"
+            );
+            return;
+          } // Check if start or end is in a red zone
           const startRedZone = isInRedZone(startCoords[0], startCoords[1]);
           const endRedZone = isInRedZone(endCoords[0], endCoords[1]);
 
           if (startRedZone) {
             alert(
-              `Cannot start flight: Current location is in a red zone (${startRedZone.name})`
+              `Cannot start flight: Current location is in a no-fly zone (${startRedZone.name})`
             );
             return;
           }
 
           if (endRedZone) {
             alert(
-              `Cannot fly to destination: Destination is in a red zone (${endRedZone.name})`
+              `Cannot fly to destination: Destination is in a no-fly zone (${endRedZone.name})`
             );
             return;
           }
@@ -1031,7 +1077,7 @@
         });
 
       // Handle window resize
-      window.addEventListener('resize', function() {
+      window.addEventListener("resize", function () {
         map.invalidateSize();
         if (flightPath) {
           map.fitBounds(flightPath.getBounds());
