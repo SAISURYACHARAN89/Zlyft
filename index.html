@@ -399,52 +399,15 @@
           radius: 150,
           description: "Market square",
         },
+        {
+          id: 30,
+          name: "Vizag Airport",
+          city: "Vizag",
+          latlng:[17.729282198918, 83.2233013620839],
+          radius: 1000,
+          description: "Airport Area",
+        },
       ];
-      // Add uneven polygon for Vizag Airport
-      // Original coordinates
-      const originalCoords = [
-        [17.729, 83.218],
-        [17.732, 83.221],
-        [17.734, 83.226],
-        [17.731, 83.23],
-        [17.727, 83.229],
-        [17.725, 83.225],
-        [17.726, 83.22],
-      ];
-
-      // Step 1: Find centroid
-      let latSum = 0,
-        lngSum = 0;
-      originalCoords.forEach((coord) => {
-        latSum += coord[0];
-        lngSum += coord[1];
-      });
-      const centroid = [
-        latSum / originalCoords.length,
-        lngSum / originalCoords.length,
-      ];
-
-      // Step 2: Scale each coordinate
-      const scaleFactor = 5;
-      const scaledCoords = originalCoords.map((coord) => {
-        const latOffset = coord[0] - centroid[0];
-        const lngOffset = coord[1] - centroid[1];
-        return [
-          centroid[0] + latOffset * scaleFactor,
-          centroid[1] + lngOffset * scaleFactor,
-        ];
-      });
-
-      // Step 3: Create the polygon
-      const vizagPolygon = L.polygon(scaledCoords, {
-        color: "red",
-        fillColor: "#f03",
-        fillOpacity: 0.3,
-      }).addTo(map);
-
-      vizagPolygon.bindPopup(
-        `<b>Vizag Airport</b><br>Visakhapatnam<br>Scaled 5x Irregular No-Fly Zone`
-      );
 
       // Add red zones to the map
       redZones.forEach((zone) => {
